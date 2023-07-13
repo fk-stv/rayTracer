@@ -192,6 +192,20 @@ inline vec3 unit_vector(vec3 v) {
     return v / v.length();
 }
 
+/* function that returns a random point within a unit-sphere
+	the purpose of this function is to determine where a ray bounces after impact
+	this will most likely be used for diffuse materials only, but we shall see
+	this algorithm is a simple rejection method. if we generate a point where the x,y,z are outside
+	 a unit circle, we reject it and make a new one. if its inside, accept and move on!
+*/
+vec3 random_in_unit_sphere() {
+	while (true) {
+		auto p = vec3::random(-1,1);
+		if (p.length_squared() >= 1) continue;
+		return p;
+	}
+}
+
 #endif
 
 /*
