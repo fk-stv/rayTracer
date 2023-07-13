@@ -95,6 +95,23 @@ class vec3 {
             return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
         }
         
+		/* member function that returns a new random vec3
+			inline static
+			constructs a new vec3 using random_double() function as all 3 arguments
+		*/
+		inline static vec3 random() {
+			return vec3(random_double(), random_double(), random_double());
+		}
+		
+		/* member function that returns a new random vec3
+			inline static
+			constructs a new vec3 using the provided min/max doubles
+			constructs a new vec3 using the random_double() function based on provided range
+		*/
+		inline static vec3 random(double min, double max) {
+			return vec3(random_double(min,max), random_double(min,max), random_double(min, max);
+		}
+		
     // public member attributes
     // access specifier
     public:
@@ -196,8 +213,7 @@ access specifiers
     
 constructor stuff
         vec3() <- default constructor, has no parameters/takes no arguments
-        
- 
+		
 constructor initialization list
     vec3(): e{0,0,0} {}
     After the colon (:), you can specify things to be initialized when the function is called
@@ -211,14 +227,12 @@ operator overloading
     allows you to define how operators effect user-defined classes
     compile-time polymorphism
     
-    
 operator[] overloading
     double operator[](int i) const { return e[i]; }
     double& operator[](int i) { return e[i]; }
     allows us to use the e member attribute as an array
     keeps lvalue and rvalue consistency
     
-
 ref-qualifiers
     ref-qualified functions can only be called on lvalues. thought I was using one here, but I am not :)
     
@@ -245,7 +259,22 @@ inline functions
     this one I need to research more. Internet tell of optimizations and such; speed etc...
     as far as I can tell, these are identical to regular class member functions, but they can be defined outside the class definition
     I'm sure there is a lot im missing with this exact implementation. Will try to remember to update if I become enlightened
-    
+	
+*/
 
-
+/*WDIL 13JUL23
+	diffuse lighting
+	when a diffuse object is in a room, what it looks like is determined by the surrounding light as well as its intrinsic color
+	for example, light rays are sent to the object, and depending on what wavelengths get absorbed/reflected and their direction distribution determines what it looks like
+	a method for determining how rays reflect off a sphere, for example, is by looking at the point of impact
+		there is a unit-length radius sphere on each side of the impact point, one outside the sphere object and one inside
+		the unit tangent sphere on the same side of the ray's origin is chosen
+		a random point in the chosen sphere is chosen
+		the ray moves towards this point
+		-> diffuse reflection on a sphere (or any diffuse surface?)
+		unit sphere inside: (P - n) (n is surface normal)
+		unit sphere outside: (P + n)
+		send ray to random point S in chosen unit sphere
+			this vector is (S - P)
+			
 */
