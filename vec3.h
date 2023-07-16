@@ -109,7 +109,7 @@ class vec3 {
 			constructs a new vec3 using the random_double() function based on provided range
 		*/
 		inline static vec3 random(double min, double max) {
-			return vec3(random_double(min,max), random_double(min,max), random_double(min, max);
+			return vec3(random_double(min,max), random_double(min,max), random_double(min, max));
 		}
 		
     // public member attributes
