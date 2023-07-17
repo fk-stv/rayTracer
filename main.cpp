@@ -89,8 +89,11 @@ color ray_color(const ray& r, const hittable& world, int depth) {
             must account for stack overflow, added depth parameter to ray_color()
         */
         //return 0.5 * (rec.normal + color(1,1,1));
-        point3 target = rec.p + rec.normal + random_in_unit_sphere();
-        
+		
+		/* updated with random_unit_vector() function */
+        //point3 target = rec.p + rec.normal + random_in_unit_sphere();
+        point3 target = rec.p + rec.normal + random_unit_vector();
+		
         /*the constant before ray_color corresponds to how intense ray reflections appear*/
         return 0.5 * ray_color(ray(rec.p, target - rec.p), world, depth - 1);
         //return 1.0 * ray_color(ray(rec.p, target - rec.p), world, depth - 1);

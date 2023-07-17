@@ -206,6 +206,15 @@ vec3 random_in_unit_sphere() {
 	}
 }
 
+/* function that generates a random unit-length vector 
+	here we can just combine two functions we already wrote!
+	first, we generate a random point in a unit-sphere, then we unit-vectorize it
+	
+*/
+vec3 random_unit_vector() {
+	return unit_vector(random_in_unit_sphere());
+}
+
 #endif
 
 /*
@@ -291,4 +300,23 @@ inline functions
 		send ray to random point S in chosen unit sphere
 			this vector is (S - P)
 			
+*/
+
+/*WDIL 17JUL23
+	lambertian reflection
+		the reflection method we have been using for diffuse reflections is a simple rejection method
+			basically, generate ray in cube where x,y,z all range -1,1, if ray in sphere, then accept!
+		this results in a ray distribution scale of cos^3(theta), where theta=angle from the normal
+		this results in high probability of new ray being close to normal, low probability of steep angles
+		this is realistic, as low-angle light scatters wide and contributes less to final color
+		however, we want lambertian distribution, which has ray distribution of cos(theta)
+		this is a more uniform distribution of our current distribution method
+		
+		two important visual differences, according to shirley
+		1 shadows are less pronounced
+		2 both spheres are lighter in appearence
+		
+		due to: uniform scattering of light rays, fewer towards the normal !
+			diffuse objects appear LIGHTER because more light bounces toward the camera
+			for shadows, less light is bouncing straight up, so light direcly under sphere is LIGHTER
 */
