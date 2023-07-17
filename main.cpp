@@ -83,13 +83,17 @@ color ray_color(const ray& r, const hittable& world, int depth) {
     /*if the bounce limit is reached, stop gathering light*/
     if ( depth <= 0 ) return color(0,0,0);
     
+    /* second argument changed to 0.001 for shadow acne */
     if (world.hit(r, 0, infinity, rec)) {
         /*replaced by algorithm for diffuse reflection
             must account for stack overflow, added depth parameter to ray_color()
         */
         //return 0.5 * (rec.normal + color(1,1,1));
         point3 target = rec.p + rec.normal + random_in_unit_sphere();
+        
+        /*the constant before ray_color corresponds to how intense ray reflections appear*/
         return 0.5 * ray_color(ray(rec.p, target - rec.p), world, depth - 1);
+        //return 1.0 * ray_color(ray(rec.p, target - rec.p), world, depth - 1);
     }
     vec3 unit_direction = unit_vector(r.direction());
     auto t = 0.5*(unit_direction.y() + 1.0);
@@ -224,9 +228,7 @@ ray tracer sends rays through pixels and computes the color seen in that directi
 very top-level pseudocode:
     1 calculate the ray from the 'eye' to the pixel
     2 determine which objects the ray intersects
-    3 compute color from intersection point
-    
-    
+    3 compute color from intersection point    
 
 */
 
@@ -236,6 +238,11 @@ very top-level pseudocode:
     but why is the big one only green?
     well, that is because its a really big sphere, and the top part of it is green according to the normal map
     so we are just seeing a zoomed in part of the green part of the small sphere essentially
-    tested this out by adding a sphere as a 'skybox' and predicted it would look purple, which it did
+    
+*/
+
+/*WDIL 16JUL23
+shadow acne
+
 
 */
