@@ -90,9 +90,17 @@ color ray_color(const ray& r, const hittable& world, int depth) {
         */
         //return 0.5 * (rec.normal + color(1,1,1));
 		
+		/* here are different methods for calculating diffuse impacts.
+			it is important to experiment with each one.
+			which one works best for many diffuse surfaces? few?
+			is there a difference with antialias samples?
+			gamma?
+		*/
 		/* updated with random_unit_vector() function */
         //point3 target = rec.p + rec.normal + random_in_unit_sphere();
-        point3 target = rec.p + rec.normal + random_unit_vector();
+		/* updated with random_in_hemisphere() function */
+        //point3 target = rec.p + rec.normal + random_unit_vector();
+		point3 target = rec.p + rec.normal + random_in_hemisphere();
 		
         /*the constant before ray_color corresponds to how intense ray reflections appear*/
         return 0.5 * ray_color(ray(rec.p, target - rec.p), world, depth - 1);
@@ -162,13 +170,14 @@ int main()
         
         // std::cerr output for progress during render
         // std::flush ignores usual buffer and prints immediately
+		// stays on one line! doesn't pollute (or cmd optimization?)
         std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
         
         for (int i = 0; i < image_width; i++) {
             
             color pixel_color(0,0,0);
             for (int s = 0; s < samples_per_pixel; ++s) {
-                //was accidentally dividing by random double before, instead of adding ...
+                //was accidentally dividing by random_double() before, instead of adding ...
                 auto u = (i + random_double()) / (image_width-1);
                 auto v = (j + random_double()) / (image_height-1);
                 ray r = cam.get_ray(u,v);

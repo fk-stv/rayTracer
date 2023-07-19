@@ -2,10 +2,18 @@
 #define HITTABLE_H
 
 #include "ray.h"
+#include "rtweekend.h"
+
+/* will have to look into this... as we are not 'including' a file that defines 'material' ...
+	shirley says that this is to alert the c++ compiler that the pointer points to a class, for shared_ptr I believe?
+*/
+class material;
 
 struct hit_record {
     point3 p;
     vec3 normal;
+	/* material will help tell us how rays interact with surfaces */
+	shared_prt<material> mat_ptr;
     double t;
     bool front_face;
     

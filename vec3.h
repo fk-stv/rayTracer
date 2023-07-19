@@ -209,10 +209,23 @@ vec3 random_in_unit_sphere() {
 /* function that generates a random unit-length vector 
 	here we can just combine two functions we already wrote!
 	first, we generate a random point in a unit-sphere, then we unit-vectorize it
-	
 */
 vec3 random_unit_vector() {
 	return unit_vector(random_in_unit_sphere());
+}
+
+/* function that generates a random unit vector and returns one 
+   in the same hemisphere as the normal
+	common diffuse method used before adoption of lambertian diffusion
+*/
+vec3 random_in_hemisphere(cost vec3& normal) {
+	vec3 in_unit_sphere = random_in_unit_sphere();
+	/* if dot product of in_unit_sphere and normal is > 0.0 then in same hemisphere as normal */
+	if (dot(in_unit_sphere, normal) > 0.0) {
+		return in_unit_sphere;
+	} else {
+		return -in_unit_sphere;
+	}
 }
 
 #endif
@@ -319,4 +332,21 @@ inline functions
 		due to: uniform scattering of light rays, fewer towards the normal !
 			diffuse objects appear LIGHTER because more light bounces toward the camera
 			for shadows, less light is bouncing straight up, so light direcly under sphere is LIGHTER
+*/
+
+/*WDIL 19JUL23
+	deciding between our diffuse calculation methods
+		shirley describes the initial diffuse methods we learned as 'hacks' that lasted a long
+		time before being proved incorrect. incorrect meaning not exactly representative of how it works
+		in the real-world. the methods lasted so long, apparently, because
+			1 it was mathematically difficult to prove that the distribution was incorrect
+			2 it was difficult to explain why a cos(theta) distribution is desirable and what it looks like
+		
+		random vector random length
+			cos^3(theta) distribution
+		random vector unit length (lambertian (?))
+			cos(theta) distribution
+		hemisphere distribution, independent of angle from normal
+			uniform scatter all angles away from hit point
+
 */
