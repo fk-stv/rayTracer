@@ -9,6 +9,10 @@ class material {
 	public:
 	/* shirley says we use 'hit_record' here to 'avoid a bunch of arguments so we can stuff w.e. info we want here' ... 
 		not entirely sure what that means ...
+		apparently, hit_record is a way for us to 'stuff a bunch of arguments into a struct'
+			slightly better explanation... but still ... kind of an odd way to describe a struct in my amateur opinion
+		when a ray hits a surface, the material pointer in hit_record will be set to the surface's material pointer that
+		was given to it during initialization from main()
 	*/
 		virtual bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const = 0;
 };
