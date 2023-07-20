@@ -11,11 +11,11 @@
 #include "camera.h"
 
 double hit_sphere(const point3& center, double radius, const ray& r) {
-    
-    // complicated math section ...
-    // we are checking if a ray's position is inside the sphere's geometry
+    /* complicated linear math section ...
+     we are checking if a ray's position is inside the sphere's geometry
+    */
     vec3 oc = r.origin() - center;
-    /*
+    /* replaced by a simplified version
     auto a = dot(r.direction(), r.direction());
     auto b = 2.0* dot(oc, r.direction());
     auto c = dot(oc, oc) - radius*radius;
@@ -74,7 +74,8 @@ color ray_color(const ray& r) {
 */
 
 /* new ray_color function
-    accepts two parameters, a const reference to a ray object 'r', const reference to hittable object 'world'
+    accepts two parameters:
+    a const reference to a ray object 'r', const reference to hittable object 'world'
     returns a color object (vec3)
 */
 color ray_color(const ray& r, const hittable& world, int depth) {
@@ -102,7 +103,9 @@ color ray_color(const ray& r, const hittable& world, int depth) {
         //point3 target = rec.p + rec.normal + random_unit_vector();
 		point3 target = rec.p + rec.normal + random_in_hemisphere();
 		
-        /*the constant before ray_color corresponds to how intense ray reflections appear*/
+        /*the constant before ray_color corresponds to 
+        how intense ray reflections appear
+        */
         return 0.5 * ray_color(ray(rec.p, target - rec.p), world, depth - 1);
         //return 1.0 * ray_color(ray(rec.p, target - rec.p), world, depth - 1);
     }
@@ -153,19 +156,22 @@ int main()
     // Render the image
     
     
-    // PPM format stuff
+    /* PPM format stuff
     // p3 means colors are in ASCII
     // image_width -> columns
     // image_height-> rows
     // 255 for max color
     // loop for RGB triplets
-    // 255 0 142 225 220 0 112 112 112 etc ...
+    // 255 0 142 225 220 0 112 112 112 etc ... 
+    */
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
     
     // c++ is row major, meaning the rows are contiguous in memory, not columns
-    // for each row, starting at row 255
-    //  for each column, starting at col 0
-    //  loop moves across rows backwards for visual result purpose (?) or for ppm format purpose ...
+    /* for each row, starting at row 255
+      for each column, starting at col 0
+      loop moves across rows backwards for visual result purpose (?) 
+      or for ppm format purpose ... 
+    */  
     for (int j = image_height-1; j >= 0; j--) {
         
         // std::cerr output for progress during render
