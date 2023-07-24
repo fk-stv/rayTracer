@@ -95,6 +95,15 @@ class vec3 {
             return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
         }
         
+        /*function that returns true if a vector's dimensions are close to zero*/
+        bool near_zero() const {
+            const auto s = 1e-8;
+            return (fabs(e[0]) < s) && (fabs(e[1]) < s) && (fabs(e[2]) < s);
+            
+        }
+        
+
+        
 		/* member function that returns a new random vec3
 			inline static
 			constructs a new vec3 using random_double() function as all 3 arguments
@@ -111,6 +120,7 @@ class vec3 {
 		inline static vec3 random(double min, double max) {
 			return vec3(random_double(min,max), random_double(min,max), random_double(min, max));
 		}
+        
 		
     // public member attributes
     // access specifier
@@ -218,7 +228,7 @@ vec3 random_unit_vector() {
    in the same hemisphere as the normal
 	common diffuse method used before adoption of lambertian diffusion
 */
-vec3 random_in_hemisphere(cost vec3& normal) {
+vec3 random_in_hemisphere(const vec3& normal) {
 	vec3 in_unit_sphere = random_in_unit_sphere();
 	/* if dot product of in_unit_sphere and normal is > 0.0 then in same hemisphere as normal */
 	if (dot(in_unit_sphere, normal) > 0.0) {
@@ -226,6 +236,16 @@ vec3 random_in_hemisphere(cost vec3& normal) {
 	} else {
 		return -in_unit_sphere;
 	}
+}
+
+/*function that returns a vec3 representing a reflection off a reflective surface, like metal
+   reflected ray direction is calculated like so:
+    v + 2b
+    while the normal n is a unit vector, v isn't always
+    and length of b should be dot(v,n)
+*/
+vec3 reflect(const vec3& v, const vec3& n) {
+    return v - 2*dot(v,n)*n;
 }
 
 #endif

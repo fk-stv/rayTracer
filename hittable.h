@@ -13,7 +13,7 @@ struct hit_record {
     point3 p;
     vec3 normal;
 	/* material will help tell us how rays interact with surfaces */
-	shared_prt<material> mat_ptr;
+	shared_ptr<material> mat_ptr;
     double t;
     bool front_face;
     

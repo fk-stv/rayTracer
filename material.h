@@ -17,6 +17,14 @@ class material {
 		virtual bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const = 0;
 };
 
+/* lambertian class inheriting material class 
+    for diffuse materials
+    apparently, lambertian scattering can be handled in a few ways:
+        scatter attenuates by its reflectance R
+        scatter does not attenuate, but absorbs 1-R rays
+        a mix of the above two
+        scatter with some probability p and have attenuation be albedo/p
+*/
 class lambertian : public material {
     
     public:
@@ -25,7 +33,14 @@ class lambertian : public material {
         virtual bool scatter( 
             const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
         ) const override {
+            /*issue here: random vector can cancel out scatter direction*/
             auto scatter_direction = rec.normal + random_unit_vector();
+            
+            /*step to catch near-zero reflection vectors*/
+            if(scatter_direction.near_zero()) {
+                scatter_direction = rec.normal;
+            }
+            
             scattered = ray(rec.p, scatter_direction);
             attenuation = albedo;
             return true;
@@ -35,6 +50,29 @@ class lambertian : public material {
         color albedo;
     
 };
+
+/*class for relfective metal surface*/
+class metal : public material {
+    
+    public:
+        metal(const color& a, double f) : albedo(a), fuzz(f < 1 ? f : 1) {}
+        
+        virtual bool scatter(
+            const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
+        ) const override {
+            vec3 reflected = reflect(unit_vector(r_in.direction()), rec.normal);
+            scattered = ray(rec.p, reflected + fuzz*random_in_unit_sphere());
+            attenuation = albedo;
+            return (dot(scattered.direction(), rec.normal) > 0);
+        }
+        
+        
+    public:
+        color albedo;
+        double fuzz;
+    
+};
+
 
 #endif
 
@@ -49,4 +87,9 @@ class lambertian : public material {
 			this is the approach we are gonna use, which means the class must achieve two things:
 				1 produce a scattered ray (or absorb the incident ray)
 				2 if scattered, say how much the ray should be attenuated (reduced in effect/force)
+*/
+
+/* WDIL 22JUL23 
+    fuzzy shiny reflection
+        if we want a reflection to look fuzzy, the destination of the ray after reflection must be randomized. we can achieve this by adding some calculation to our scattered ray's construction arguments. if we take the 'reflected' variable, and add the product of a new 'fuzz' parameter and a 'random_in_unit_sphere()' ray, then the destination will be random within a sphere of radius 'fuzz'. fuzz of 0 will be normal shiny.
 */
